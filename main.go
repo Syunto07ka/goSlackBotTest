@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
@@ -11,21 +9,22 @@ func main() {
 	lambda.Start(pushMessage)
 }
 
-func pushMessage(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	name := "カッキー"   // request.PathParameters["name"]
-	message := "わーい" // request.QueryStringParameters["message"]
+func pushMessage(request events.APIGatewayProxyRequest) (Chat, error) {
+	name := "カッキー" // request.PathParameters["user_name"]
+	var message string
+
+	if request.PathParameters["text"] != "" {
+		message = request.PathParameters["text"]
+	} else {
+		message = "わーい"
+	}
 
 	chat := Chat{
 		Username: name,
 		Text:     message,
 	}
 
-	jsonMessage, err := json.Marshal(chat)
-
-	return events.APIGatewayProxyResponse{
-		Body:       string(jsonMessage),
-		StatusCode: 200,
-	}, nil
+	return chat, nil
 }
 
 // Chat is a message.
