@@ -11,13 +11,7 @@ func main() {
 
 func pushMessage(request events.APIGatewayProxyRequest) (Chat, error) {
 	name := "カッキー" // request.PathParameters["user_name"]
-	var message string
-
-	if request.PathParameters["text"] != "" {
-		message = request.PathParameters["text"]
-	} else {
-		message = "わーい"
-	}
+	message := request.PathParameters["text"]
 
 	chat := Chat{
 		Username: name,
